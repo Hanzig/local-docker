@@ -1,0 +1,10 @@
+name: Slack notification on PR, new issue
+
+on: [pull_request, issues]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: GitHub Action for Slack
+      uses: Ilshidur/action-slack@1.0.1
