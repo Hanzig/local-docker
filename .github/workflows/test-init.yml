@@ -24,6 +24,8 @@ jobs:
         brew cask install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
         echo "List some folder contents to see we have what we need to have"
+        file /Applications
+        file /Applications/Docker.app
         ls -l /Applications | grep Docker
         ls -l /Applications/Docker.app/
         ls -l /Applications/Docker.app/Contents/MacOS/Docker
