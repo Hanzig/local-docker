@@ -23,25 +23,17 @@ jobs:
       run: |
         brew cask install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
-        echo "List some folder contents to see we have what we need to have"
-        file /Applications
-        file /Applications/Docker.app
-        ls -l /Applications | grep Docker
-        ls -l /Applications/Docker.app/
-        ls -l /Applications/Docker.app/Contents/MacOS/Docker
         echo "NEXT: open -F -g -a /Applications/Docker.app"
         open -F -g -a /Applications/Docker.app
         # sudo /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
         # /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
-        # echo $?
-        # echo 'Docker.app should be now running...'
+        echo 'Docker.app should be now running...'
         #echo 'Starting Docker.app again (with nohup)...'
         #nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
-        #echo $?
-        echo 'Docker.app should be now running...'
-        echo 'try to find out docker bin'
+        echo 'Docker.app should be now running (again, with nohup)...'
         which docker || echo 'no docker in path'
-        ls -lh /usr/local/bin | grep docker
+        ls -lh /usr/local/bin | grep docker || echo 'No docker in /usr/local/bin - exiting'
+        [ ! -f /usr/local/bin/docker ] && exit 1
         while ! docker system info > /dev/null 2>&1; do echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
         docker system info
         docker ps 
