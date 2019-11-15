@@ -21,9 +21,15 @@ jobs:
       run: |
         brew cask install docker
         brew install docker-compose
-        open --background -a Docker
+        open -v -F -g -a /Applications/Docker.app
+        echo $?
+        ls -h /Applications | grep Docker
+        which docker || echo 'no docker in path'
+        echo $PATH
+        ls -lh /usr/local/bin/ | grep docker
         while ! docker system info > /dev/null 2>&1; do echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
-        docker ps && docker system info
+        docker system info
+        docker ps 
         docker-compose --version
 
     - name: Install docker-sync
