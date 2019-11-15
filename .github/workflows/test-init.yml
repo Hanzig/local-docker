@@ -17,11 +17,19 @@ jobs:
       run: echo This event is a pull request. Test build ./ld init.
 #    - name: Install homebrew (installed on macOS-latest as per https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners#macos-1015)
 #      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    - name: Install Docker and docker-compose
+    - name: Install Docker.app and docker-compose using brew
       run: |
-        brew cask install docker
-        brew install docker-compose
-        open -v -F -g -a /Applications/Docker.app
+        brew cask install docker && echo 'docker installed'
+        brew install docker-compose && 'docker-compose installed'
+        echo "Starting Docker.app..."
+        # open -v -F -g -a /Applications/Docker.app
+        # sudo /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+        /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+        echo $?
+        echo 'Docker.app should be now running...'
+        echo 'Starting Docker.app again...'
+        nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
+        echo 'Docker.app should be now running...'
         echo $?
         ls -h /Applications | grep Docker
         echo 'try to find out docker bin'
