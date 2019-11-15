@@ -19,15 +19,15 @@ jobs:
 #      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     - name: Install Docker.app and docker-compose using brew
       run: |
-        brew cask install docker && echo 'docker installed'
-        brew install docker-compose && 'docker-compose installed'
+        #brew install docker && echo 'docker installed'
+        brew install docker-compose && echo 'docker-compose installed'
         echo "Starting Docker.app..."
         # open -v -F -g -a /Applications/Docker.app
         # sudo /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
-        /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
-        echo $?
-        echo 'Docker.app should be now running...'
-        echo 'Starting Docker.app again...'
+        # /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+        # echo $?
+        # echo 'Docker.app should be now running...'
+        echo 'Starting Docker.app again (with nohup)...'
         nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
         echo 'Docker.app should be now running...'
         echo $?
