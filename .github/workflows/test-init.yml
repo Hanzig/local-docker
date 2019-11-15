@@ -23,20 +23,21 @@ jobs:
       run: |
         #brew install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
-        echo "Starting Docker.app..."
-        # open -v -F -g -a /Applications/Docker.app
+        echo 'Starting Docker.app: open -F -g -a /Applications/Docker.app'
+        open -F -g -a /Applications/Docker.app
         # sudo /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
         # /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
         # echo $?
         # echo 'Docker.app should be now running...'
+        ls -h /Applications | grep Docker
+        ls -l /Applications/Docker.app/
+        ls -l /Applications/Docker.app/Contents/MacOS/Docker
         echo 'Starting Docker.app again (with nohup)...'
         nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
-        echo 'Docker.app should be now running...'
         echo $?
-        ls -h /Applications | grep Docker
+        echo 'Docker.app should be now running...'
         echo 'try to find out docker bin'
         which docker || echo 'no docker in path'
-        echo $PATH
         ls -lh /usr/local/bin | grep docker
         while ! docker system info > /dev/null 2>&1; do echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
         docker system info
