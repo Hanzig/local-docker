@@ -17,8 +17,8 @@ jobs:
       run: echo This event is a pull request. Test build ./ld init.
 #    - name: Install homebrew (installed on macOS-latest as per https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners#macos-1015)
 #      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    - name: Disable Gatekeeper (which asks for confirmation to run things from the internet)
-      run: sudo spctl --master-disable
+    - name: Give green light to start up Docker (@see https://apple.stackexchange.com/a/329618)
+      run: xattr -r -d com.apple.quarantine /Applications/Docker.app     
     - name: Install Docker.app and docker-compose using brew
       run: |
         brew cask install docker && echo 'docker installed'
