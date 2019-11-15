@@ -21,7 +21,7 @@ jobs:
       run: sudo spctl --master-disable
     - name: Install Docker.app and docker-compose using brew
       run: |
-        #brew install docker && echo 'docker installed'
+        brew cask install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
         echo 'Starting Docker.app: open -F -g -a /Applications/Docker.app'
         open -F -g -a /Applications/Docker.app
