@@ -17,24 +17,38 @@ jobs:
       run: echo This event is a pull request. Test build ./ld init.
 #    - name: Install homebrew (installed on macOS-latest as per https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners#macos-1015)
 #      run: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    - name: Give green light to start up Docker (@see https://apple.stackexchange.com/a/329618)
-      run: xattr -r -d com.apple.quarantine /Applications/Docker.app     
     - name: Install Docker.app and docker-compose using brew
       run: |
         brew cask install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
+        echo 'Docker.app and docker-compose installed.'
+        
+    - name: Set Docker trusted even when it is downloaded from the internet (@see https://apple.stackexchange.com/a/329618)
+      run: xattr -r -d com.apple.quarantine /Applications/Docker.app     
+
+    - name: Launch Docker.app
+      run: |
         echo "NEXT: open -F -g -a /Applications/Docker.app"
         open -F -g -a /Applications/Docker.app
-        # sudo /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
-        # /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+        echo "NEXT: Try to find Docker dialog to click 'OK'"
+        osascript -e '
+        #tell application "Docker"
+        #	if it is not running then launch
+        #	activate
+        #end tell
+        delay 4
+        tell application "System Events" to keystroke return
+        '
+        echo "NEXT: Wait for docker to wake up"
+        while ! docker system info > /dev/null 2>&1; do docker system info && ROUND=1 && echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
         echo 'Docker.app should be now running...'
+        echo "NEXT: wait for Docker to wake up..."
         #echo 'Starting Docker.app again (with nohup)...'
         #nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
-        echo 'Docker.app should be now running (again, with nohup)...'
+        #echo 'Docker.app should be now running (again, with nohup)...'
         which docker || echo 'no docker in path'
         ls -lh /usr/local/bin | grep docker || echo 'No docker in /usr/local/bin - exiting'
-        [ ! -f /usr/local/bin/docker ] && exit 1
-        while ! docker system info > /dev/null 2>&1; do echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
+        [ -f /usr/local/bin/docker ] || exit 1
         docker system info
         docker ps 
         docker-compose --version
