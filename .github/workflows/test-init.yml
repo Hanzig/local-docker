@@ -31,9 +31,8 @@ jobs:
           whoami
           cd ~
           pwd
-          sudo whoami
           #sudo fdesetup disable
-          sudo dscl . -passwd /root root
+          sudo dscl . -passwd /Users/runner SOME-PASSWORD-HERE
           
     - name: Launch Docker.app
       run: |
