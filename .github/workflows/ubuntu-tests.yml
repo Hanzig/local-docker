@@ -1,0 +1,51 @@
+name: Test build and init with docker-sync
+
+on: 
+  pull_request:
+    branches: 
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Run a one-line script
+      if: github.event_name == 'pull_request'
+      run: echo This event is a pull request. Test build ./ld init.
+
+
+    - name: Get versions of Docker and docker-compose
+      run: |
+        echo "NEXT: Wait for docker to wake up"
+        while ! docker system info > /dev/null 2>&1; do docker system info && ROUND=1 && echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
+        echo 'Docker.app should be now running...'
+        echo "NEXT: wait for Docker to wake up..."
+        #echo 'Starting Docker.app again (with nohup)...'
+        #nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
+        #echo 'Docker.app should be now running (again, with nohup)...'
+        which docker || echo 'no docker in path'
+        ls -lh /usr/local/bin | grep docker || echo 'No docker in /usr/local/bin - exiting'
+        [ -f /usr/local/bin/docker ] || exit 1
+        docker system info
+        docker ps 
+        docker-compose --version
+
+    - name: DO NOT install docker-sync
+      run: |
+        #gem install docker-sync
+        #docker-sync
+        echo 'Skip installing docker-sync'
+
+    - name: List what is in the project folder.
+      run: ls -lha
+
+    - name: Check the type of ld
+      run: file ld
+
+    - name: Run init and see where it gets us
+      run: ./ld init
+
