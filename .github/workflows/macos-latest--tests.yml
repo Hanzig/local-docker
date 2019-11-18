@@ -1,4 +1,4 @@
-name: Test build and init with docker-sync
+name: Test build and commands with macOS-latest
 
 on: 
   pull_request:
