@@ -32,8 +32,8 @@ jobs:
           cd ~
           pwd
           sudo whoami
-          sudo fdesetup disable
-          sudo dscl . -passwd /Users/abc password
+          #sudo fdesetup disable
+          sudo dscl . -passwd /root root
           
     - name: Launch Docker.app
       run: |
@@ -44,22 +44,35 @@ jobs:
           tell application "Docker"
             if it is not running then launch
             activate
-            delay 4
+            delay 5
             tell application "System Events"
               set theWindowList to windows of process "Docker"
               repeat with theItem in theWindowList
-                if theItem is (frontmost is true) and name is empty then
-                  tell dialogWindow
+                set ItemDescr to the description of theItem
+                if ItemDescr is "dialog" then
+                  tell theItem
                     tell button "OK"
                       click it
-                      display dialog "clicked!"
                     end tell
                   end tell
                 end if
-                # Fallback, blindly "press enter"
-                tell application "System Events" to keystroke return
+
+                # Wait for the password dialog to show up.
+                repeat until exists window 1 of process "SecurityAgent"
+                  delay 1
+                end repeat
+
+                # Set the password and submit the form.
+                set pwdDialog to window 1 of process "SecurityAgent"
+                set thePwdDialogFieldsList to text fields of the pwdDialog
+                repeat with theCurrentField in thePwdDialogFieldsList
+                  if name of the theCurrentField is "Password:" then
+                    set value of theCurrentField to "SOME-PASSWORD-HERE"
+                    click button 2 of pwdDialog
+                  end if
+                end repeat
+
               end repeat
-              return theItem
             end tell
           end tell
         '
