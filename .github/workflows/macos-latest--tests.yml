@@ -20,10 +20,9 @@ jobs:
     - name: Reset the password of user 'runner' (FileVault2 is already disabled in Github CI  instance of MacOs-latest)
       run: |
           whoami
-          #$(echo 'SOME-PASSWORD-HERE' | sudo passwd runner)
-          #sudo passwd runner SOME-PASSWORD-HERE
-          #$(echo 'SOME-PASSWORD-HERE' | sudo dscl . -passwd /Users/runner SOME-PASSWORD-HERE)
-          sudo dscl . -passwd /Users/runner SOME-PASSWORD-HERE
+          sudo su root
+          whoami
+          dscl . -passwd /Users/runner SOME-PASSWORD-HERE
           
     - name: Install Docker.app and docker-compose using brew
       run: |
@@ -33,6 +32,12 @@ jobs:
         
     - name: Set Docker trusted even when it is downloaded from the internet (@see https://apple.stackexchange.com/a/329618)
       run: xattr -r -d com.apple.quarantine /Applications/Docker.app     
+
+    - name: Change runner -user's password so we can use the known password when launching Docker.app for the first time
+      run: |
+        sudo su root
+        dscl . -passwd /Users/runner SOME-PASSWORD-HERE
+        exit
 
     - name: Launch Docker.app
       run: |
