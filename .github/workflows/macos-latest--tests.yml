@@ -1,8 +1,8 @@
 name: Test build and commands with macOS-latest
 
-on: 
+on:
   pull_request:
-    branches: 
+    branches:
     - master
 
 jobs:
@@ -20,18 +20,18 @@ jobs:
     - name: Reset the password of user 'runner' (FileVault2 is already disabled in Github CI  instance of MacOs-latest)
       run: |
           whoami
-          sudo su root
+          sudo -i
           whoami
           dscl . -passwd /Users/runner SOME-PASSWORD-HERE
-          
+
     - name: Install Docker.app and docker-compose using brew
       run: |
         brew cask install docker && echo 'docker installed'
         brew install docker-compose && echo 'docker-compose installed'
         echo 'Docker.app and docker-compose installed.'
-        
+
     - name: Set Docker trusted even when it is downloaded from the internet (@see https://apple.stackexchange.com/a/329618)
-      run: xattr -r -d com.apple.quarantine /Applications/Docker.app     
+      run: xattr -r -d com.apple.quarantine /Applications/Docker.app
 
     - name: Change runner -user's password so we can use the known password when launching Docker.app for the first time
       run: |
@@ -94,7 +94,7 @@ jobs:
         ls -lh /usr/local/bin | grep docker || echo 'No docker in /usr/local/bin - exiting'
         [ -f /usr/local/bin/docker ] || exit 1
         docker system info
-        docker ps 
+        docker ps
         docker-compose --version
 
     - name: Install docker-sync
@@ -110,4 +110,3 @@ jobs:
 
     - name: Run init and see where it gets us
       run: ./ld init
-
