@@ -23,13 +23,8 @@ jobs:
         echo "NEXT: Wait for docker to wake up"
         while ! docker system info > /dev/null 2>&1; do docker system info && ROUND=1 && echo "Waiting Docker.app to start, round ${ROUND}" && sleep 2 && (( ROUND + 1 )) ; done
         echo 'Docker.app should be now running...'
-        echo "NEXT: wait for Docker to wake up..."
-        #echo 'Starting Docker.app again (with nohup)...'
-        #nohup /Applications/Docker.app/Contents/MacOS/Docker --unattended &
-        #echo 'Docker.app should be now running (again, with nohup)...'
         which docker || echo 'no docker in path'
-        ls -lh /usr/local/bin | grep docker || echo 'No docker in /usr/local/bin - exiting'
-        [ -f /usr/local/bin/docker ] || exit 1
+        [ -f /usr/bin/docker ] || exit 1
         docker system info
         docker ps 
         docker-compose --version
