@@ -29,6 +29,11 @@ jobs:
         docker ps 
         docker-compose --version
 
+    - name: Install Ruby
+      run: |
+        sudo apt install ruby-full
+        which gem
+
     - name: Install docker-sync (depencency)
       run: |
         gem install docker-sync
