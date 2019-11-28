@@ -49,6 +49,6 @@ jobs:
 
     - name: Run init and see where it gets us
       run: |
-        COMPOSE_INTERACTIVE_NO_CLI=1
+        export COMPOSE_INTERACTIVE_NO_CLI=1
         ./ld init
 
