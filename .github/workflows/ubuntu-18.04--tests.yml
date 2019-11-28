@@ -29,11 +29,11 @@ jobs:
         docker ps 
         docker-compose --version
 
-    - name: DO NOT install docker-sync
+    - name: Install docker-sync (depencency)
       run: |
-        #gem install docker-sync
-        #docker-sync
-        echo 'Skip installing docker-sync'
+        gem install docker-sync
+        which docker-sync
+
 
     - name: List what is in the project folder.
       run: ls -lha
