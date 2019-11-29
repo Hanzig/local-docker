@@ -48,7 +48,5 @@ jobs:
       run: file ld
 
     - name: Run init and see where it gets us
-      run: |
-        export COMPOSE_INTERACTIVE_NO_CLI=1
-        ./ld init
+      run:  ./ld init
 
